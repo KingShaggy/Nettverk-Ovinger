@@ -19,20 +19,20 @@ bool check_if_prime(int num){
     return true;
 }
 
-int main()
-{
-    vector<thread> threads;
-    vector<int> primes;
-
-    int start = 0;
-    int end = 100;
-
+void FindPrimes(int start, int end, vector<int> &primes){   //& makes you pass a referance to the original primes variable, any changes done in the function will change the original
     while(start < end){
         if (check_if_prime(start)){
             primes.push_back(start);
         }
         ++start;
     }
+}
+
+int main()
+{
+    vector<int> primes;
+
+    FindPrimes(0, 100, primes);
 
     for (auto i: primes){
         cout << i << " ";
