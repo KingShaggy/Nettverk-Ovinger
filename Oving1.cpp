@@ -1,9 +1,13 @@
 #include <iostream>
 #include <vector>
 #include <thread>
+#include <mutex>
 
 
 using namespace std;
+
+vector<int> primes;
+mutex prime_mutex;
 
 bool check_if_prime(int num){
     if (num == 0 || num == 1){
@@ -19,20 +23,37 @@ bool check_if_prime(int num){
     return true;
 }
 
-void FindPrimes(int start, int end, vector<int> &primes){   //& makes you pass a referance to the original primes variable, any changes done in the function will change the original
+void FindPrimes(int start, int end){   //& makes you pass a referance to the original primes variable, any changes done in the function will change the original
     while(start < end){
         if (check_if_prime(start)){
+            prime_mutex.lock();
             primes.push_back(start);
+            prime_mutex.unlock();
         }
         ++start;
     }
 }
 
+void UseThreads(int start, int end, int numOfThreads){
+    vector<thread> threads;
+
+    int numPerThread = (end - start) / numOfThreads;
+    int localEnd = start + numPerThread;
+
+    for (int i = 0; i < numOfThreads; i++){
+        threads.emplace_back(FindPrimes, start, localEnd);
+        start += numPerThread;
+        localEnd += numPerThread;
+    }
+
+    for (auto& t : threads){
+        t.join();
+    }
+}
+
 int main()
 {
-    vector<int> primes;
-
-    FindPrimes(0, 100, primes);
+    UseThreads(0, 100, 3);
 
     for (auto i: primes){
         cout << i << " ";
