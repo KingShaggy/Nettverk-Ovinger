@@ -23,7 +23,7 @@ bool check_if_prime(int num){
     return true;
 }
 
-void FindPrimes(int start, int end){   //& makes you pass a referance to the original primes variable, any changes done in the function will change the original
+void FindPrimes(int start, int end){
     while(start < end){
         if (check_if_prime(start)){
             prime_mutex.lock();
