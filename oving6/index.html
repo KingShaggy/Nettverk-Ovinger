@@ -7,6 +7,26 @@
     <title>WebSocket</title>
 </head>
 <body>
-    
+    <input type="text" id="message" name="message"><br><br>
+    <input type="submit" values="Send" onClick="sendMessage()">
+    <div id="chat" class="div"></div>
 </body>
+<script>
+    const ws = new WebSocket("ws://localhost:6969");
+
+    ws.addEventListener('open', () => {
+        console.log('Connection to server achieved');
+    })
+
+    ws.addEventListener('message', (message) => {
+        console.log("Message received: " + message.data);
+        document.getElementById("chat").innerHTML = document.getElementById("chat").innerHTML + "<br> " + message.data;    
+    })
+
+    function sendMessage() {
+        let message = document.getElementById("message").value;
+        document.getElementById("chat").innerHTML = document.getElementById("chat").innerHTML + "</br> You: " + message;
+        ws.send(message);
+    }
+</script>
 </html>
